@@ -27,6 +27,7 @@ namespace ActividadDiccionarios
                         consumirRecurso(inventario);
                         break;
                     case 4:
+                        consultarRecurso(inventario);
                         break;
                     case 5:
                         break;
@@ -83,7 +84,7 @@ namespace ActividadDiccionarios
                 do{
                     deseaAgregarlo = InputHelper.IngresarString("Este material no existe. Desea agregarlo al inventario (y/n):");
                     if (deseaAgregarlo.ToLower() == "y"){
-                        inventario.Add(materialUsuario, 0)
+                        inventario.Add(materialUsuario, 0);
                         Console.WriteLine("Se ha agregado el nuevo material con éxito. Stock actual del material: 0");
                     }
                     else if (deseaAgregarlo.ToLower() == "n"){
@@ -101,13 +102,35 @@ namespace ActividadDiccionarios
             if(inventario.ContainsKey(materialUsuario))
             {
                 int cantidadStockConsumido = InputHelper.IngresarInt($"Ingrese la cantidad de stock consumido. Stock de {materialUsuario}: {inventario[materialUsuario]}: ");
-                while (cantidadStock == -1){
+                while (cantidadStockConsumido == -1 || cantidadStockConsumido > inventario[materialUsuario]){
                     Console.WriteLine("[ERROR] Valor inválido. Volver a intentar...");
-                    cantidadStock = InputHelper.IngresarInt("Ingrese la cantidad de stock que le desea agregar: ");
+                    cantidadStockConsumido = InputHelper.IngresarInt($"Ingrese la cantidad de stock consumido. Stock de {materialUsuario}: {inventario[materialUsuario]}: ");
                 }
-                inventario[materialUsuario] += cantidadStock;
+                inventario[materialUsuario] += cantidadStockConsumido;
                 Console.WriteLine("Se ha actualizado el stock correctamente!");
             }
+            else
+            {
+                Console.WriteLine("[ERROR] No se encontró el material ingresado. Volviendo al menú...");
+            }
+        }
+
+        static void consultarRecurso(Dictionary<string,int> inventario)
+        {
+           string materialUsuario = InputHelper.IngresarString("Ingrese el material para consumir:");
+            if(inventario.ContainsKey(materialUsuario))
+            {
+                Console.WriteLine($"Material encontrado!");
+                Console.WriteLine($"------------------------------------");
+                Console.WriteLine($"Nombre:     {materialUsuario}");
+                Console.WriteLine($"En stock:   {inventario[materialUsuario]}");
+                Console.WriteLine($"------------------------------------");
+                Console.WriteLine($"Volviendo al menú...");
+            }
+            else
+            {
+                Console.WriteLine("[ERROR] No se encontró el material ingresado. Volviendo al menú...");
+            } 
         }
     }
 }
